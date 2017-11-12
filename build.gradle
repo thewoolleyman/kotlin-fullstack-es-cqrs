@@ -1,0 +1,12 @@
+allprojects {
+  group = "io.kfec"
+  version = "1.0"
+
+  repositories {
+    jcenter()
+  }
+}
+
+subprojects {
+  version = project.version
+}
