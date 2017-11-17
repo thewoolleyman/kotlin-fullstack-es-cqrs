@@ -1,0 +1,15 @@
+// See https://guides.gradle.org/running-webpack-with-gradle/
+
+task webpack(type: Exec) {
+  inputs.file("package-lock.json").withPathSensitivity(PathSensitivity.RELATIVE)
+  inputs.dir("src/app").withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.dir("$buildDir/js")
+  outputs.cacheIf { true }
+
+  commandLine "$projectDir/node_modules/.bin/webpack", "src/app/index.js", "$buildDir/js/bundle.js"
+}
+
+task build(dependsOn: "webpack")
+task clean {
+  delete buildDir
+}

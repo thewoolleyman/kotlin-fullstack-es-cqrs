@@ -1,1 +1,1 @@
-include 'applications:server'
+include 'applications:server', 'applications:web-client'

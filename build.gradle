@@ -10,3 +10,7 @@ allprojects {
 subprojects {
   version = project.version
 }
+
+task clean {
+  dependsOn subprojects.collect { it.tasks.matching { it.name == 'clean' } }
+}
