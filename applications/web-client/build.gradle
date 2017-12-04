@@ -1,15 +1,38 @@
 // See https://guides.gradle.org/running-webpack-with-gradle/
 
-task webpack(type: Exec) {
+buildscript {
+  ext.kotlin_version = '1.1.60'
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  }
+}
+
+apply plugin: 'kotlin2js'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+}
+
+task webpack(type: Exec, dependsOn: "compileKotlin2Js") {
   inputs.file("package-lock.json").withPathSensitivity(PathSensitivity.RELATIVE)
   inputs.dir("src/app").withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir("$buildDir/js")
   outputs.cacheIf { true }
 
-  commandLine "$projectDir/node_modules/.bin/webpack", "src/app/index.js", "$buildDir/js/bundle.js"
+  commandLine "$projectDir/node_modules/.bin/webpack", "build/classes/kotlin/main/web-client.js", "$buildDir/js/bundle.js"
 }
 
-task build(dependsOn: "webpack")
-task clean {
-  delete buildDir
+//task build(dependsOn: "compileKotlin2Js")
+//task webpack(dependsOn: "compileKotlin2Js")
+
+compileKotlin2Js.kotlinOptions {
+  moduleKind = "amd"
+//  outputFile = "node/index.js"
 }
